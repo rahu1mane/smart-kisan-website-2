@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crops</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Crops Container -->
+    <div class="crop-container" id="cropList"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("crop_data.json")
+          .then((response) => response.json())
+          .then((data) => {
+            let cropList = document.getElementById("cropList");
+
+            data.forEach((crop) => {
+              let cropBox = document.createElement("div");
+              cropBox.className = "crop-box";
+
+              let cropImage = document.createElement("img");
+              cropImage.src = `images/${crop["Crop Name"].toLowerCase()}.jpg`; // Ensure images are named correctly
+              cropImage.alt = crop["Crop Name"];
+              cropImage.className = "crop-img";
+
+              let cropName = document.createElement("p");
+              cropName.innerText = crop["Crop Name"];
+              cropName.className = "crop-name";
+
+              cropBox.appendChild(cropImage);
+              cropBox.appendChild(cropName);
+
+              cropBox.addEventListener("click", function () {
+                window.location.href = `crop_details.html?name=${encodeURIComponent(
+                  crop["Crop Name"]
+                )}`;
+              });
+
+              cropList.appendChild(cropBox);
+            });
+          })
+          .catch((error) => console.error("Error loading crops:", error));
+      });
+    </script>
+    <!-- Spacing Below Content -->
+    <div class="spacing"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        &copy; 2025 Smart Kisan | <a href="#">Privacy Policy</a> |
+        <a href="mailto:smartkisann@gmail.com">Contact Us</a>
+      </p>
+    </footer>
+  </body>
+</html>

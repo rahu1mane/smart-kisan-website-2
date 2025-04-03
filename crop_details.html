@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crop Details</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <!-- <header>
+      <h1>Smart Kisan - Crop Details</h1>
+    </header> -->
+
+    <!-- Navigation Bar -->
+    <!-- <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="./crop.html">Crops</a></li>
+
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav> -->
+    <!-- Crop Details Section -->
+    <div class="crop-details-container">
+      <a href="crop.html">
+        <div class="back_button">< Back</div>
+      </a>
+      <img id="cropImage" class="crop-details-img" src="" alt="Crop Image" />
+      <h2 id="cropName"></h2>
+      <table id="cropDetailsTable">
+        <!-- Dynamic crop details will be inserted here -->
+      </table>
+    </div>
+
+    <script>
+      // Fetch crop name from URL
+      const params = new URLSearchParams(window.location.search);
+      const cropName = params.get("name");
+
+      if (cropName) {
+        fetch("crop_data.json")
+          .then((response) => response.json())
+          .then((data) => {
+            const crop = data.find((item) => item["Crop Name"] === cropName);
+
+            if (crop) {
+              document.getElementById("cropImage").src = `images/${crop[
+                "Crop Name"
+              ].toLowerCase()}.jpg`;
+              document.getElementById("cropName").innerText = crop["Crop Name"];
+
+              // Create table rows dynamically
+              let table = document.getElementById("cropDetailsTable");
+              table.innerHTML = ""; // Clear previous content
+
+              for (let key in crop) {
+                let row = document.createElement("tr");
+                let keyCell = document.createElement("td");
+                let valueCell = document.createElement("td");
+
+                keyCell.innerText = key.replace(/_/g, " "); // Replace underscores with spaces for better readability
+                valueCell.innerText = crop[key] || "N/A"; // Display "N/A" if data is missing
+
+                row.appendChild(keyCell);
+                row.appendChild(valueCell);
+                table.appendChild(row);
+              }
+            } else {
+              document.querySelector(".crop-details-container").innerHTML =
+                "<p>Crop details not found.</p>";
+            }
+          })
+          .catch((error) =>
+            console.error("Error loading crop details:", error)
+          );
+      }
+    </script>
+    <!-- Spacing Below Content -->
+    <div class="spacing"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        &copy; 2025 Smart Kisan | <a href="#">Privacy Policy</a> |
+        <a href="mailto:smartkisann@gmail.com">Contact Us</a>
+      </p>
+    </footer>
+  </body>
+</html>
